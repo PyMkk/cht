@@ -23,8 +23,13 @@ $('#right').click(() => {
 $("#com").keydown((e) => {
   let ms = document.myf.com.value;
   let nm = document.myf.name.value;
-  if (ms != "" && nm != "") {
+  let comBox = $('#com').val();
+  if (nm != "" && ms != "") {
     if (e.keyCode == 13) {
+      // $('#com').val(comBox.replace(/\r|\n|\r\n|&#010/g, '<br>'));
+      $('#com').val(comBox.replace(/\r\n/g, "<br />").replace(/(\n|\r)/g, "<br />"));
+
+      document.myf.com.focus();
       chatConnection.setUserData(JSON.stringify({
         name: nm,
         dipeType: urlParam["stance"]
@@ -32,12 +37,20 @@ $("#com").keydown((e) => {
       chatConnection.sendData(
         JSON.stringify({
           "msg": ms,
-          "name": nm,
+          "name": nm.replace(/\r|\n|\r\n/g, '<br>'),
           "dipeType": urlParam["stance"],
           "uname": nm
         })
       );
-      document.myf.com.value = "";
+
+      $('#com').val(comBox.replace(/\r\n/g, "<br />").replace(/(\n|\r)/g, "<br />"));
+      $('#com').val('');
+      // document.myf.com.focus();
+      // $('#com').text(comBox.replace(/[\r\n]+/g, ''));
+      // if (comBox.replace(/^[ \n]+$/, '') == '') {
+      //   if (comBox.replace(/^\n+$/, '') == '')
+      //     $('#com').val('');
+      // }
     }
   }
 });
@@ -60,12 +73,13 @@ $('#chat_send').click(() => {
       })
     );
   }
-  document.myf.com.value = "";
+  $('#com').val("");
 });
 
 //urlParam["stance"] == "debateLeft"
 //データをチャットメッセージとして追加する関数
 const commandFilter = new CommandFilter();
+
 function msgDataAdd(data) {
   console.log(data);
   data = JSON.parse(data);

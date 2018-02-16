@@ -19,9 +19,9 @@ $('#roomType').change(() => {
     addVoteTimeSelecter.append("<option value='1800'>30分</option>");
     addVoteTimeSelecter.append("<option value='900'>15分</option>");
     addVoteTimeSelecter.append("<option value='300'>5分</option>");
-    addVoteTimeSelecter.append("<option value='10'>test</option>");
+    addVoteTimeSelecter.append("<option value='20'>test</option>");
     $("#voteTimeSelecter").append(addVoteTimeSelecter);
-  }else{
+  } else {
     $("#voteTimeSelecter").text("");
   }
 });
@@ -29,7 +29,7 @@ $('#roomType').change(() => {
 $('#create_room').click(() => {
   const roomName = $("#roomName").val();
   const roomType = $("#roomType").val();
-  const description = $("#descText").val();
+  let description = $("#descText").val();
   const voteTime = $("#voteSelect").val();
   let roomInfo;
   if (roomName == "" || roomType == "")
@@ -41,6 +41,7 @@ $('#create_room').click(() => {
       voteEndTime: 30
     };
   }
+  description == "" ? description = "None description" : description;
   roomCreateSocket.emit('create', JSON.stringify({
     "roomName": roomName,
     "roomType": roomType,
