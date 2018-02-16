@@ -123,7 +123,7 @@ chatConnection.socket.on("userListUpdate", (userDataList) => {
     if (userData == undefined)
       return;
     console.log(userData);
-    userData = JSON.parse(userData);)
+    userData = JSON.parse(userData);
     let name = userData.name == undefined ? "none" : userData.name;
     if (userData.dipeType == "debateLeft")
       leftStr += " " + name + " ";
