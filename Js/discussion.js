@@ -6,10 +6,10 @@ const chatConnection = new ChatConnection(decodeURIComponent(urlParam["roomName"
 
 let voteFlag = false;
 
-if(urlParam["stance"] == "debateLeft"){
-$('#myStance').html("STANCE[ 肯定 ]");
-}else{
-  if(urlParam["stance"] == "debateRight"){
+if (urlParam["stance"] == "debateLeft") {
+  $('#myStance').html("STANCE[ 肯定 ]");
+} else {
+  if (urlParam["stance"] == "debateRight") {
     $('#myStance').html("STANCE[ 否定 ]");
   }
 }
@@ -123,7 +123,7 @@ chatConnection.socket.on("userListUpdate", (userDataList) => {
     if (userData == undefined)
       return;
     console.log(userData);
-    userData = JSON.parse(userData);
+    userData = JSON.parse(userData);)
     let name = userData.name == undefined ? "none" : userData.name;
     if (userData.dipeType == "debateLeft")
       leftStr += " " + name + " ";
@@ -149,8 +149,8 @@ function unsetVoteMode() {
 
 function setVoteMode() {
   voteFlag = true;
-  $("#left").text("肯定に投票する").html();
-  $("#right").text("否定に投票する").html();
+  $("#left").text("肯定に投票").html();
+  $("#right").text("否定に投票").html();
 }
 
 //
@@ -168,6 +168,7 @@ chatConnection.socket.on("endVote", (data) => {
   unsetVoteMode();
 });
 
+
 //投票の開始
 chatConnection.socket.on("startVote", (data) => {
   setVoteMode();
@@ -175,7 +176,7 @@ chatConnection.socket.on("startVote", (data) => {
 
 //投票までの時間をカウントダウンする
 chatConnection.socket.on("startVoteSecond", (second) => {
-  $("#countDown").text("残り[ "+ Math.floor(second/60) + "分"+ second%60+"秒 ]");
+  $("#countDown").text("残り[ " + Math.floor(second / 60) + "分" + second % 60 + "秒 ]");
 });
 
 //投票終了までの時間をカウントダウンする

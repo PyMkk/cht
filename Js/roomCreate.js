@@ -19,7 +19,7 @@ $('#roomType').change(() => {
     addVoteTimeSelecter.append("<option value='1800'>30分</option>");
     addVoteTimeSelecter.append("<option value='900'>15分</option>");
     addVoteTimeSelecter.append("<option value='300'>5分</option>");
-    addVoteTimeSelecter.append("<option value='20'>test</option>");
+    addVoteTimeSelecter.append("<option value='10'>test</option>");
     $("#voteTimeSelecter").append(addVoteTimeSelecter);
   } else {
     $("#voteTimeSelecter").text("");
@@ -38,7 +38,7 @@ $('#create_room').click(() => {
   if (roomType == "discussion_free") {
     roomInfo = {
       voteStartTime: voteTime,
-      voteEndTime: 30
+      voteEndTime: 10
     };
   }
   description == "" ? description = "None description" : description;

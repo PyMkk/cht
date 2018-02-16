@@ -35,7 +35,7 @@ exports.VoteControl = class {
         this._leftCount = 0;
         this._rightCount = 0;
         //投票者のIPを保存するリスト
-        this._votersIpList = new VotersIpList(); 
+        this._votersIpList = new VotersIpList();
     }
     vote(voteType, ip) {
         if (this._votersIpList.exsistIp(ip) == false) {
