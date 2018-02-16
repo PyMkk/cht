@@ -6,18 +6,29 @@ const chatConnection = new ChatConnection(decodeURIComponent(urlParam["roomName"
 
 let voteFlag = false;
 
+if(urlParam["stance"] == "debateLeft"){
+$('#myStance').html("STANCE[ 肯定 ]");
+}else{
+  if(urlParam["stance"] == "debateRight"){
+    $('#myStance').html("STANCE[ 否定 ]");
+  }
+}
+
 //左右に別れるためのロケーション
 $('#left').click(() => {
-  if (voteFlag == false)
+  if (voteFlag == false) {
     document.location.href = "discussion.html?stance=debateLeft&roomName=" + urlParam["roomName"];
-  else
+  } else {
     chatConnection.socket.emit("vote", "left");
+  }
 });
+
 $('#right').click(() => {
-  if (voteFlag == false)
+  if (voteFlag == false) {
     document.location.href = "discussion.html?stance=debateRight&roomName=" + urlParam["roomName"];
-  else
+  } else {
     chatConnection.socket.emit("vote", "right");
+  }
 });
 
 $("#com").keydown((e) => {
@@ -164,10 +175,10 @@ chatConnection.socket.on("startVote", (data) => {
 
 //投票までの時間をカウントダウンする
 chatConnection.socket.on("startVoteSecond", (second) => {
-  $("#countDown").text("投票まで残り" + second + "秒");
+  $("#countDown").text("残り[ "+ Math.floor(second/60) + "分"+ second%60+"秒 ]");
 });
 
 //投票終了までの時間をカウントダウンする
 chatConnection.socket.on("endVoteSecond", (second) => {
-  $("#countDown").text("投票終了まで残り" + second + "秒");
+  $("#countDown").text("投票終了まで：" + second + "秒");
 });
