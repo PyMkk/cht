@@ -38,6 +38,8 @@ class CommentArrow {
 
 let commentArrow = new CommentArrow();
 
+let videoId = "";
+
 $('#sendButton').click(function (e) {
   let ms = document.myf.com.value;
   if (ms != "") {
@@ -60,28 +62,90 @@ const urlParam = urlGetParamParse(document.location.href);
 const chatConnection = new ChatConnection(urlParam["roomName"], msgDataAdd);
 chatConnection.logSaveFlag = false;
 
-chatConnection.socket.on("urlSend", (urlStr) => {
-  setMovieURL(urlStr);
+chatConnection.socket.on("videoIdSend", (videoId) => {
+  setMovieURL(videoId);
+});
+
+chatConnection.socket.on("fixSeek", (seek) => {
+  youtubePlayer.setSeek(seek);
 });
 
 
-function setMovieURL(url) {
-  //"https://www.youtube.com/embed/Iag55pIKWzI?rel=0&start=0&end=5&modestbranding=0&showinfo=0&fs=0&controls=0&autoplay=1&loop=1&playlist=Iag55pIKWzI"
-  let v = urlGetParamParse(url)["v"];
-  if (v) {
-    url = "https://www.youtube.com/embed/" + v + "?rel=0&start=0&end=5&modestbranding=0&showinfo=0&fs=0&controls=0&autoplay=1&loop=1&playlist=" + v;
-    $("#iframe").attr("src", url);
-  }
+
+function setMovieURL(_videoId) {
+  videoId = _videoId;
+  youtubePlayer.changeUrl(videoId);
 }
 
 $("#sendUrl").click(e => {
-  chatConnection.socket.emit("urlSend", $("#urlText").val());
+  const videoId = urlGetParamParse($("#urlText").val()).v;
+  if (videoId) {
+    chatConnection.socket.emit("videoIdSend", videoId);
+  }
 });
 
-setMovieURL("https://www.youtube.com/watch?v=AN3YqXbWgOs");
+chatConnection.socket.emit("initVideoId");
 const commandFilter = new CommandFilter();
 //データをチャットメッセージとして追加する関数
 function msgDataAdd(msgData) {
   let msg = commandFilter.doCommandFilter(JSON.parse(msgData));
   commentArrow.create(msg);
 }
+
+class YoutubePlayer {
+
+  constructor() {
+    this._player = null;
+    this._videoId;
+    this._readyFlag = false;
+  }
+
+  setSeek(seek) {
+    if (this._readyFlag) {
+      console.log(this._player.getCurrentTime());
+      if (Math.abs(this._player.getCurrentTime() - seek) > 1) {
+        this._player.seekTo(seek, true);
+      }
+    }
+  }
+
+  changeUrl(videoId) {
+    this._videoId = videoId;
+    if (this._readyFlag)
+      this._player.loadVideoById(videoId);
+  }
+
+  createPlayer(videoId) {
+    const onPlayerReady = (event) => {
+      event.target.loadVideoById(this._videoId);
+      event.target.playVideo();
+      this._readyFlag = true;
+    };
+    this._player = new YT.Player('iframe', {
+      height: '500',
+      width: '100%',
+      videoId: videoId,
+      playerVars: {
+        controls: 0, // コントロールバーを表示しない
+        showinfo: 0, // 動画情報を表示しない
+        modestbranding: 1,
+        fs: 0,
+        showinfo: 0,
+        rel: 0
+      },
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': this.onPlayerStateChange
+      }
+    });
+  }
+  onPlayerStateChange(event) { }
+}
+
+let youtubePlayer = new YoutubePlayer();
+//youtube apiが準備し終わった時に呼ばれる関数
+function onYouTubeIframeAPIReady() {
+  console.log("createPlayer");
+  youtubePlayer.createPlayer(videoId);
+}
+
