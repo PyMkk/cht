@@ -27,9 +27,7 @@ $("#com").keydown((e) => {
   if (nm != "" && ms != "") {
     if (e.keyCode == 13) {
       // $('#com').val(comBox.replace(/\r|\n|\r\n|&#010/g, '<br>'));
-      $('#com').val(comBox.replace(/\r\n/g, "<br />").replace(/(\n|\r)/g, "<br />"));
-
-      document.myf.com.focus();
+      $('#com').val(comBox.replace("\n", ""));
       chatConnection.setUserData(JSON.stringify({
         name: nm,
         dipeType: urlParam["stance"]
@@ -37,20 +35,13 @@ $("#com").keydown((e) => {
       chatConnection.sendData(
         JSON.stringify({
           "msg": ms,
-          "name": nm.replace(/\r|\n|\r\n/g, '<br>'),
+          "name": nm.replace(/\r|\n|\r\n/g, ''),
           "dipeType": urlParam["stance"],
           "uname": nm
         })
       );
-
-      $('#com').val(comBox.replace(/\r\n/g, "<br />").replace(/(\n|\r)/g, "<br />"));
-      $('#com').val('');
-      // document.myf.com.focus();
-      // $('#com').text(comBox.replace(/[\r\n]+/g, ''));
-      // if (comBox.replace(/^[ \n]+$/, '') == '') {
-      //   if (comBox.replace(/^\n+$/, '') == '')
-      //     $('#com').val('');
-      // }
+      $('#com').val(comBox.replace("\n", ""));
+      document.myf.com.value = "";
     }
   }
 });
@@ -74,6 +65,7 @@ $('#chat_send').click(() => {
     );
   }
   $('#com').val("");
+  document.myf.com.value = "";
 });
 
 //urlParam["stance"] == "debateLeft"
