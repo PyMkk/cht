@@ -18,7 +18,7 @@ function loadRoomSocket() {
   });
 
 }
-aaaa
+
 let attract_title = "";
 let attractList = new Array();
 const attractNamespace = io.of("/attractConnection");
