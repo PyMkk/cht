@@ -1,4 +1,4 @@
-const chatName = "ARRAYMA";
+const chatName = "HOGECHAT";
 
 
 
